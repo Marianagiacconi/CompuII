@@ -1,7 +1,6 @@
 import argparse
 import os 
-from pathlib import Path
-import random
+import time
 
 def main():
 
@@ -9,36 +8,27 @@ def main():
   
     parser = argparse.ArgumentParser()
     parser.add_argument('-n',type=int,help='procesos',action='store')
-    parser.add_argument('-r',type=str, help ='letras')
-    parser.add_argument('-f', action='store_true')
-    parser.add_argument('-v',type=str, help= 'modo verbose',action='store')
+    parser.add_argument('-r',type=int, help ='letras')
+    parser.add_argument('-f', action='store', required= True)
+    parser.add_argument('-v', help= 'modo verbose',action='store')
     args = parser.parse_args()
 
-
-    if args.f == True:
-        f = Path('./compuII/procesos[fork-fd]/fork_fd.py/letras.txt')
-        f = open(f)
-        
-    else:
-        f = Path('./compuII/procesos[fork-fd]/fork_fd.py/letras.txt')
-        print(f)
-        if args.v :
-            letras= ['A', 'B', 'C', 'D', 'E']
-            let = [letras]
-            v = args.n
-            args.n = os.fork()
-            print(f"\n  Proceso pid ",os.getpid () , 'escribiendo letra', let)
-        
-        else:
-            i = args.n
-            args.r = letras= ['A', 'B', 'C', 'D', 'E'] 
-            for i in range(len(letras)):
-                print(i)
-                i = os.fork()
-
+    with open(args.f,'+w') as f:
+        for i in range (args.r):
+            letras = chr(65 + i)  
+            if args.v : 
+                args.n = os.fork()
+                print(f"\n  Proceso pid ",os.getpid () , 'escribiendo letra', letras)
+            else:
+                for i in range(args.n):
+                    args.n = os.fork()
+                    print(f"",letras)
+                f.write(letras)
+                f.flush()
+                time.sleep(i)
+            os._exit(0)
+        os.wait()
 
 if '__main__' == __name__:
     
     main()
-
-
