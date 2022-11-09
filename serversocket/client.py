@@ -1,16 +1,38 @@
 import socket
+import sys
 import argparse
+import time, sys
+    
+def client(h,p):
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    except socket.error:
+        print("Fallo la conexion al socket")
+        sys.exit()
+    
+    #Recibe host por argumento
+    host = h
+    #Recibe port por argumento
+    port = p
+    print("Conectando...")
+    time.sleep(2)
+    s.connect((host,port))
+    print("Handshake realizado")
+    time.sleep(1)
+    print("Esperando datos del servidor")
+    while True:    
+        #print("Cerrando conexion")
+        msg = input("Ingrese comando a ejecutar:")
+        s.send(msg.encode())
+        print("Esperando datos del server")
+        msg = s.recv(1024)
+        print(msg.decode())
+    
 
-parser = argparse.ArgumentParser(description="cliente")
-parser.add_argument("-j", "--host", type=str, required=True, help="Ingrese la direccion ip del host")
-parser.add_argument("-p", "--puerto", type=int, required=True, help="Ingrese el numero de puerto del host")
-args = parser.parse_args()
-HOST, PORT = args.host, args.port
-
-with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as socket:
-    socket.connect((HOST, PORT)) 
-    while True:
-        print("test1")
-        data = socket.recv(1024)
-        print("test2")
-        print(data)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="Help")
+    parser.add_argument("-ht","--host",required=True,help="Dirección IP o nombre del servidor al que conectarse")
+    parser.add_argument("-p","--port", type=int,required=True,help="Numero de puerto del servidor")
+    args = parser.parse_args()
+    print(args.host,args.port)
+    client(args.host,args.port)
