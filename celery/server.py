@@ -9,8 +9,8 @@ from task import log
 def funcion_calculo(con,adr):
     tarea = eval(con.recv(1024).decode())
     if tarea[0].lower() == 'log':
-        resultadoSum = log.delay(tarea[1], tarea[2])
-        con.send(str(resultadoSum.get()).encode())
+        resultado = log.delay(tarea[1], tarea[2])
+        con.send(str(resultado.get()).encode())
     
     else:
         con.send('Error')

@@ -9,7 +9,6 @@ def main():
     parse = argparse.ArgumentParser()
     parse.add_argument('-i', '--ipserver', help='Indica el servidor', type=str, action='store', required=True)
     parse.add_argument('-p', '--port', help='Indica el puerto', type=int, action='store', required=True)
-    parse.add_argument('-o', '--operacion', help='Indica el tipo de operacion', type=str, action='store', required=True)
     parse.add_argument('-n', '--numero', help='numero a calcular', type=int, action='store', required=True)
 
     args = parse.parse_args()
@@ -21,8 +20,8 @@ def main():
     except:
         print('Puerto o Server erroneos')
         sys.exit()
-    lista_oper = [args.operacion, args.numero]
-    sock_cliente.send(str(lista_oper).encode())
+    oper = [ args.numero]
+    sock_cliente.send(str(oper).encode())
     respuesta = sock_cliente.recv(1024)
     print('Su resultado es: ',respuesta.decode())
     print('Operacion realizada, desconectando...')
